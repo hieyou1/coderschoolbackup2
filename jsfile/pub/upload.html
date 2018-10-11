@@ -1,12 +1,37 @@
 <html>
-    <head>
-        <title>Upload</title>
-    </head>
-    <body>
-        <form method="POST">
-            <input type="file" name="supboi" id="supboi" />
-            <br />
-            <input type="submit" value="UPLOAD THE THING ALREADY PLEASE WEBSITE" />
-        </form>
-    </body>
+
+<head>
+    <title>Upload</title>
+</head>
+
+<body>
+    <input type="file" id="supboi" />
+    <br />
+    <button onclick="ioaegh();">UPLOAD THE THING ALREADY PLEASE WEBSITE</button>
+    <script>
+        function id(elementId) { return document.getElementById(elementId) }
+        function ioaegh() {
+            var file = id("supboi").files[0];
+            if (!file) {
+                window.alert("No file");
+                throw("hi");
+            }
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                var postbody = {
+                    "file": reader.result,
+                    "filename": id("supboi").value
+                };
+                fetch(window.location.href, {
+                    method: 'post',
+                    headers: { 'Accept': 'application/json, text/plain, text/html', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(postbody)
+                });
+
+            };
+        }
+    </script>
+</body>
+
 </html>
