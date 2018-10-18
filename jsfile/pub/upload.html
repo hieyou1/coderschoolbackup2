@@ -5,9 +5,11 @@
 </head>
 
 <body>
-    <input type="file" id="supboi" />
+    <input type="file" id="supboi"/>
     <br />
     <button onclick="ioaegh();">UPLOAD THE THING ALREADY PLEASE WEBSITE</button>
+    <input type="file" id="folder" webkitdirectory mozdirectory />
+    <button onclick="aweg();">ok i need folder upload plsthxbye</button>
     <script>
         function id(elementId) { return document.getElementById(elementId) }
         function ioaegh() {
@@ -18,8 +20,9 @@
             }
             var reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = function () {
+            reader.onload = () => {
                 var postbody = {
+                    "type": "file",
                     "file": reader.result,
                     "filename": id("supboi").value
                 };
@@ -28,8 +31,31 @@
                     headers: { 'Accept': 'application/json, text/plain, text/html', 'Content-Type': 'application/json' },
                     body: JSON.stringify(postbody)
                 });
-
             };
+        }
+        function aweg() {
+            var zip = new JSZip();
+            var files = id("folder").files;
+            var filefolder = zip.folder(id("folder").value);
+            for (let file of files) {
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    filefolder.file(file.name, reader.result.substring(reader.result.indexOf("base64,") + 7, reader.result.length), {base64: true});
+                }
+            }
+            zip.generateAsync({type: "base64"}).then((b64) => {
+                var postbody = {
+                    "type": "ethan",
+                    "file": b64,
+                    "filename": id("folder").value
+                };
+                fetch(window.location.href, {
+                    method: 'post',
+                    headers: { 'Accept': 'application/json, text/plain, text/html', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(postbody)
+                });
+            });
         }
     </script>
 </body>

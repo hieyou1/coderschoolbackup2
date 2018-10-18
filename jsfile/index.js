@@ -1,13 +1,15 @@
 const fs = require('fs');
-//const ejs = require('ejs');
+const ejs = require('ejs');
 const express = require('express');
 const bodypars = require('body-parser');
+const { join } = require('path');
 const app = express();
-app.use((thisisanunusedvariable, res, next) => {res.header("Access-Control-Allow-Origin", "*");next();});
-app.use(bodypars.urlencoded({ extended: false}));
+app.use((thisisanunusedvariable, res, next) => {res.header("Access-Control-Allow-Origin", "*"); next();});
+app.use(bodypars.urlencoded({ extended: false }));
 app.use(bodypars.json());
 const port = 9536;
 const currentPath = __dirname;
+app.use("/data", express.static(currentPath + "/data"));
 function readFile(file) {
   var out = fs.readFile(file, (err, data) => {
     if (err) {return "error";}
@@ -34,5 +36,16 @@ app.post('/upload', (req, res) => {
   console.log(`Uploaded file: ${filename}`);
   fs.writeFile(`data/${filename}`, b64, 'base64', (err) => {if (err) console.log(`err: ${err}`);});
   res.sendFile(currentPath + "/pub/upload.html");
+});
+app.get('/download', (req, res) => {
+  fs.readdir(currentPath + "/data", (err, files) => {
+    if (err) console.log(`fserr: ${err}`);
+    ejs.renderFile("pub/download.ejs", {data : files}, (err2, data) => {
+      if (err2) console.log(`ejserr: ${err}`);
+      console.log(`Data: ${data}`);
+      res.send(data);
+    });
+    //res.sendFile(currentPath + '/pub/download.html');
+  });
 });
 app.listen(port, () => console.log("Listening on port " + port));

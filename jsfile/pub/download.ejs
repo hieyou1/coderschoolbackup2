@@ -1,0 +1,10 @@
+<html>
+    <head>
+        <title>Download</title>
+    </head>
+    <body>
+        <% for (let file of data) { %>
+            <a href="../data/<%= file%>" download><%= file %></a>
+        <% } %>
+    </body>
+</html>
